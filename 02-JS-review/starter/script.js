@@ -142,3 +142,133 @@ function getBooks() {
 function getBook(id) {
   return data.find((d) => d.id === id);
 }
+
+// Destructuring
+
+const book = getBook(3);
+book;
+const { title, author, genres, pages, reviews, hasMovieAdaptation } = book; // Needs to match field names in JSON
+
+const [primaryGenre, secondaryGenre, ...otherGenres] = genres; // Takes nth element of the array by default
+
+primaryGenre;
+secondaryGenre;
+otherGenres;
+
+// Rest and Spead with ...
+const addNewGenretoArray = [...genres, "New Genre"]; // ... operator can rest or spread properties
+addNewGenretoArray;
+
+// Template Literals with ` and ${VARIABLE}
+
+const bookSummary = `The title of this book is ${title} written by ${author}. It contains ${pages} total pages. The primary genrre is ${genres[0]}`;
+bookSummary;
+
+// Ternaries CONDITION ? Result if TRUE : Result if FALSE
+
+const pagesOver1000 = pages > 1000 ? "over 1000" : "under 1000";
+pagesOver1000;
+
+// Arrow Functions
+function addFive(num) {
+  return num + 5;
+}
+
+const oldNum = 5;
+const newNum = addFive(oldNum);
+newNum;
+const addFiveArrowFunc = (oldNum) => oldNum + 5;
+
+const newNumArrowFunc = addFiveArrowFunc(oldNum);
+newNumArrowFunc;
+
+// Short-Circuiting Logical Operators
+
+console.log(true && "Hello World"); // Outputs second value if it is TRUE
+console.log(false && "Hello World"); // Short-circuits on first value if it is FALSE
+
+console.log(true || "Hello World"); // Short circuits on first value if is TRUE
+console.log(false || "Hello World"); // Outputs second value if it is FALSE
+
+console.log(0 ?? "Hello World"); //?? operator works as OR logical operator but will not short-circuit on '' or 0 values
+
+// Optional Training
+
+function getReviewCount(book) {
+  const goodReadsReviewCount = book.reviews.goodreads?.reviewsCount ?? 0;
+  const libraryThingReviewCount = book.reviews.librarything?.reviewsCount ?? 0; // JS will not evaluate anything after ? if expression before is NaN
+
+  goodReadsReviewCount;
+  libraryThingReviewCount;
+
+  return goodReadsReviewCount + libraryThingReviewCount;
+}
+
+console.log(getReviewCount(book));
+
+// Array methods (Map, Filter, Reduce, Sort)
+
+const newBooks = getBooks();
+
+const doubleNums = [1, 2, 3, 4, 5].map((num) => num * 2); // Map method, provide callback function that is applied to every element in array
+doubleNums;
+
+const bookTitles = newBooks.map((book) => book.title);
+bookTitles;
+
+const importantBookData = newBooks.map((book) => {
+  return {
+    title: book.title,
+    author: book.author,
+    reviewCount: getReviewCount(book),
+  };
+});
+
+importantBookData;
+
+const longBooks = newBooks.filter((book) => book.pages > 500); // Filter method, provide filter condition that is applied to every element in array
+longBooks;
+
+const totalPages = newBooks.reduce(
+  // Reduce method, pass in accumulator and reduce operation
+  (accumulator, book) => accumulator + book.pages,
+  0
+);
+totalPages;
+
+const testArray = [5, 3, 1, 9, 7];
+const sortedAscending = testArray.slice().sort((a, b) => a - b);
+const sortedDescending = testArray.slice().sort((a, b) => b - a);
+
+sortedAscending;
+sortedDescending;
+testArray;
+
+const sortedByPages = newBooks.slice().sort((a, b) => a.pages - b.pages);
+
+sortedByPages;
+
+// Working with immutable arrays
+// Create new instead of mutating existing data
+const newBook = {
+  id: 6,
+  title: "Harry Potter and the Chamber of Secrets",
+  author: "J.K. Rowling",
+};
+
+const booksAfterAdding = [...newBooks, newBook];
+booksAfterAdding;
+
+//Asychronous Javascript
+
+fetch("https://jsonplaceholder.typicode.com/todos/5") // Initial state of fetch is a promise, use then method to process data once its available
+  .then((res) => res.json())
+  .then((data) => console.log(data));
+
+async function getToDos() {
+  const res = await fetch("https://jsonplaceholder.typicode.com/todos/10");
+  const data = await res.json();
+  console.log(data);
+}
+
+getToDos();
